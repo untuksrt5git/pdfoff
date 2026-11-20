@@ -274,8 +274,7 @@ async function search(o, preset, lad, run){
 
 async function compressOne(file, o, fileNumber){
   const bytes = new Uint8Array(await file.arrayBuffer());
-  const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-  const outputName = isMobile ? String(fileNumber) + '.pdf' : file.name.replace(/\\.pdf$/i,'') + '-kompres.pdf';
+  const outputName = file.name.replace(/\\.pdf$/i,'') + '-compres.pdf';
   let res = null;
   if (o.meth !== 'img') {
     try { res = await viaText(bytes, o); } catch (e) { if (o.meth === 'text' || e.name === 'PasswordException') throw e; console.warn(e); }
@@ -286,8 +285,8 @@ async function compressOne(file, o, fileNumber){
     if (!res || r2.blob.size < res.blob.size) res = r2;
   }
   const hit = o.mode !== 'target' || res.blob.size <= o.target;
-  if (res.blob.size >= file.size) return { file, blob:file, name:isMobile ? outputName : file.name, method:'orig', hit: o.mode !== 'target' || file.size <= o.target };
-  return { file, blob:res.blob, name:file.name.replace(/\.pdf$/i,'') + '-kompres.pdf', method:res.method, hit };
+  if (res.blob.size >= file.size) return { file, blob:file, name:outputName, method:'orig', hit: o.mode !== 'target' || file.size <= o.target };
+  return { file, blob:res.blob, name:outputName, method:res.method, hit };
 }
 
 /* ---------- jalankan ---------- */
