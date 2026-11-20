@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Kompres PDF</title>
 <meta name="theme-color" content="#2563eb">
-<link rel="manifest" href="manifest.webmanifest">
+
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%232563eb'/%3E%3Cpath d='M20 12h17l9 9v31H20z' fill='%23fff'/%3E%3C/svg%3E">
 <style>
@@ -373,9 +373,8 @@ $('zip').onclick = async () => {
   saveBlob(await makeZip(ok.map(r => ({ name:r.name, blob:r.blob }))), 'pdf-terkompres.zip');
 };
 
-/* ---------- pasang di layar utama + offline cache ---------- */
-/* Tombol pemasangan ke layar utama disembunyikan; fitur kompresi dan cache offline tetap aktif. */
-if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('sw.js').catch(() => {});
+/* PWA dinonaktifkan agar browser tidak menampilkan ajakan pemasangan. */
+if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.getRegistrations().then(rs => rs.forEach(r => r.unregister())).catch(() => {});
 </script>
 </body>
 </html>
