@@ -272,8 +272,10 @@ async function search(o, preset, lad, run){
   }
 }
 
-async function compressOne(file, o){
+async function compressOne(file, o, fileNumber){
   const bytes = new Uint8Array(await file.arrayBuffer());
+  const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+  const outputName = isMobile ? String(fileNumber) + '.pdf' : file.name.replace(/\\.pdf$/i,'') + '-kompres.pdf';
   let res = null;
   if (o.meth !== 'img') {
     try { res = await viaText(bytes, o); } catch (e) { if (o.meth === 'text' || e.name === 'PasswordException') throw e; console.warn(e); }
@@ -284,7 +286,7 @@ async function compressOne(file, o){
     if (!res || r2.blob.size < res.blob.size) res = r2;
   }
   const hit = o.mode !== 'target' || res.blob.size <= o.target;
-  if (res.blob.size >= file.size) return { file, blob:file, name:file.name, method:'orig', hit: o.mode !== 'target' || file.size <= o.target };
+  if (res.blob.size >= file.size) return { file, blob:file, name:isMobile ? outputName : file.name, method:'orig', hit: o.mode !== 'target' || file.size <= o.target };
   return { file, blob:res.blob, name:file.name.replace(/\.pdf$/i,'') + '-kompres.pdf', method:res.method, hit };
 }
 
@@ -305,7 +307,7 @@ $('go').onclick = async () => {
     cur.i = i; const f = items[i];
     $('ptxt').textContent = 'File ' + (i+1) + ' dari ' + items.length + ': ' + f.name + (mode === 'target' ? ' (batas ' + fmt(o.target) + ')' : '');
     await tick();
-    try { results.push(await compressOne(f, o)); }
+    try { results.push(await compressOne(f, o, i + 1)); }
     catch (e) {
       console.error(e);
       results.push({ file:f, error: e && e.name === 'PasswordException' ? 'Terkunci kata sandi, buka kuncinya dulu.' : 'Gagal diproses. Coba metode lain atau tingkat kompresi lebih kuat.' });
