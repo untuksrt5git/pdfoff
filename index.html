@@ -336,7 +336,7 @@ function renderResults(o){
   const msg = [];
   if (miss) msg.push(miss + ' file belum mencapai batas ' + fmt(o.target) + '. Coba metode Halaman jadi gambar, centang hitam putih, atau naikkan batasnya.');
   if (fail) msg.push(fail + ' file gagal.');
-  $('rmsg').className = 'note ' + (msg.length ? 'wr' : 'ok'); $('rmsg').textContent = msg.join(' ') || 'Ukuran berhasil diperkecil.';
+  $('rmsg').className = 'note ' + (msg.length ? 'wr' : 'ok'); $('rmsg').textContent = (msg.join(' ') || 'Ukuran berhasil diperkecil.') + ' Periksa kembali setiap PDF hasil kompresi sebelum digunakan: pastikan file bisa dibuka, semua halaman lengkap, teks/gambar terbaca jelas, dan tata letaknya tidak berubah. Jika memungkinkan, bandingkan dengan file asli.';
   $('zip').hidden = ok.length < 2;
 }
 
